@@ -1,5 +1,6 @@
 package com.xll.redis.result;
 
+import com.xll.redis.constants.Constant;
 import lombok.Data;
 
 /**
@@ -9,13 +10,13 @@ import lombok.Data;
  **/
 @Data
 public class Result<T> {
-    private long page;  //第几页
+    private long totalPage;  //一共多少页
 
-    private long size;  //每页多少条
+    private long pageSize;  //每页多少条
 
-    private long count; //总数
+    private long total; //总数
 
-    private long countPage; //一共多少页
+    private long currentPage; //当前第几页
 
     private T data;
 
@@ -47,30 +48,26 @@ public class Result<T> {
     }
 
     public static <T> Result<T> ok(T data) {
-        return new Result<>("SUCC", data);
+        return new Result<>(Constant.ResultConstant.SUCCESS, data);
     }
 
     public static <T> Result<T> ok() {
-        return new Result<>("SUCC", null, null);
+        return new Result<>(Constant.ResultConstant.SUCCESS, null, null);
     }
 
     public static <T> Result<T> ok(String message) {
-        return new Result<>("SUCC", null, message);
-    }
-
-    public static <T> Result<T> unAuthorized() {
-        return new Result<>("UNAUTHORIZED", null, null);
+        return new Result<>(Constant.ResultConstant.SUCCESS, null, message);
     }
 
     public static <T> Result<T> ok(T data, String desc) {
-        return new Result<>("SUCC", data, desc);
+        return new Result<>(Constant.ResultConstant.SUCCESS, data, desc);
     }
 
     public static Result warn(String desc) {
-        return new Result<>("FAIL", desc);
+        return new Result<>(Constant.ResultConstant.FAIL, desc);
     }
 
     public static <T> Result<T> warn(T data, String desc) {
-        return new Result<>("FAIL", data, desc);
+        return new Result<>(Constant.ResultConstant.FAIL, data, desc);
     }
 }

@@ -12,4 +12,5 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificationExecutor<User> {
+    User getByIdAndDelIsFalse(Long id);
 }

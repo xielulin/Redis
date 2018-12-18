@@ -2,6 +2,8 @@ package com.xll.redis.param;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -14,13 +16,13 @@ public class AddOrUpdataUserParam {
 
     private Long id;
 
-    @NotNull
-    private int age;
+    @NotNull(message = "age不能为空")
+    private Integer age;
 
-    @NotNull
+    @NotBlank(message = "name不能为空")
     private String name;
 
-    @NotNull
+    @NotBlank(message = "sex不能为空")
     private String sex;
 
 }

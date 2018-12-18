@@ -1150,17 +1150,17 @@
 //     * </p>
 //     *
 //     * @param key
-//     * @param count
+//     * @param total
 //     *            当count为0时删除全部
 //     * @param value
 //     * @return 返回被删除的个数
 //     */
-//    public Long lrem(String key, long count, String value) {
+//    public Long lrem(String key, long total, String value) {
 //        Jedis jedis = null;
 //        Long res = null;
 //        try {
 //            jedis = jedisPool.getResource();
-//            res = jedis.lrem(key, count, value);
+//            res = jedis.lrem(key, total, value);
 //        } catch (Exception e) {
 //
 //            log.error(e.getMessage());
