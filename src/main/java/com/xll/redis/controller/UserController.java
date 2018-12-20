@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -39,17 +41,19 @@ public class UserController {
     }
 
     @DeleteMapping("deluser")
-    public Result<String> delUser(@RequestParam(required = false,name = "id") Long id,BindingResult bindingResult){
+    public Result<String> delUser(@RequestParam(required = false,name = "id") Long id){
         userService.deleteUser(id);
         return Result.ok();
     }
 
     @RequestMapping("getbyname")
-    public Result<List<User>> getByName(@RequestParam(defaultValue = "0")int currentPage,@RequestParam(defaultValue = "10") int pageSize,@RequestParam()String name){
+    public Result<List<User>> getByName(@RequestParam(defaultValue = "0")int currentPage, @RequestParam(defaultValue = "10") int pageSize, @RequestParam()String name, ServletRequest request1,HttpServletRequest request2){
         GetByNameParam param = new GetByNameParam();
         param.setName(name);
         param.setCurrentPage(currentPage);
         param.setPageSize(pageSize);
-        return userService.getByName(param);
+        Result<List<User>> result = userService.getByName(param);
+        result.setDesc("访问服务器端口是:"+request1.getLocalPort()+" sessionId:"+request2.getSession().getId());
+        return result;
     }
 }

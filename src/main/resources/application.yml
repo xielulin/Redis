@@ -1,7 +1,6 @@
-server:
-  port: 8080
-
 spring:
+  profiles:
+    active: @profileActive@
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: root
@@ -27,6 +26,7 @@ spring:
       ddl-auto: update
       enable_lazy_load_no_trans: true
     show-sql: true
+    open-in-view: false
 
   redis:
     database: 0

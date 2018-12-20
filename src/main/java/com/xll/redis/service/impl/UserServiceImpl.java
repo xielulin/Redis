@@ -6,6 +6,7 @@ import com.xll.redis.dao.UserRepository;
 import com.xll.redis.exception.BaseException;
 import com.xll.redis.param.AddOrUpdataUserParam;
 import com.xll.redis.param.GetByNameParam;
+import com.xll.redis.result.PageResult;
 import com.xll.redis.result.Result;
 import com.xll.redis.service.UserService;
 import com.xll.redis.utils.DateUtil;
@@ -18,15 +19,13 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -119,31 +118,32 @@ public class UserServiceImpl  implements UserService {
 
     @Override
     public Result<List<User>> getByName(GetByNameParam param) {
-        Result<List<User>> result = new Result<>();
+        Result<List<User>> result = new PageResult();
         Specification<User> specification = new Specification<User>() {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicate = new ArrayList<>();
                 predicate.add(criteriaBuilder.like(root.get("name"), "%"+param.getName()+"%"));
                 predicate.add(criteriaBuilder.isFalse(root.get("del")));
+                //predicate.add(criteriaBuilder.asc());
                 return criteriaBuilder.and(predicate.toArray(new Predicate[predicate.size()]));
             }
         };
-
-        Page<User> users = userRepository.findAll(specification, PageRequest.of(param.getCurrentPage(), param.getPageSize()));
-        result.setData(users.getContent());
         long tatol = userRepository.count(specification);
         if(tatol == 0){
-            return Result.ok();
+            return PageResult.ok();
         }
         long totalPage = tatol%param.getPageSize() == 0?tatol/param.getPageSize():tatol/param.getPageSize()+1;
         if(param.getCurrentPage()+1>totalPage){
             throw new BaseException("currentPage错误，请重新输入！");
         }
-        result.setTotal(tatol);
-        result.setPageSize(param.getPageSize());
-        result.setCurrentPage(param.getCurrentPage());
-        result.setTotalPage(totalPage);
+        Page<User> users = userRepository.findAll(specification, PageRequest.of(param.getCurrentPage(), param.getPageSize(), Sort.by("id").descending()));
+        result.setData(users.getContent());
+
+        ((PageResult) result).setTotal(tatol);
+        ((PageResult) result).setPageSize(param.getPageSize());
+        ((PageResult) result).setCurrentPage(param.getCurrentPage());
+        ((PageResult) result).setTotalPage(totalPage);
         result.setStatus(Constant.ResultConstant.SUCCESS);
         return result;
     }

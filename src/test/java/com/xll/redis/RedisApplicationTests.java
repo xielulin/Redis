@@ -24,14 +24,14 @@ public class RedisApplicationTests {
     CountDownLatch countDownLatch = new CountDownLatch(1);
 
     @Test
-    public void contextLoads() throws InterruptedException {
+    public void contextLoads() throws InterruptedException {/*
         Executor executor = config.getAsyncExecutor();
         for (int i = 0; i < 100; i++) {
             executor.execute(new MyThread());
         }
         Thread.sleep(100);
         log.info("************");
-        countDownLatch.countDown();
+        countDownLatch.countDown();*/
     }
 
     class MyThread implements Runnable{
@@ -42,7 +42,9 @@ public class RedisApplicationTests {
                 countDownLatch.await();
                 log.info(Thread.currentThread().getName() + ":开始执行");
                 User user = userService.getUser(1L);
-                log.info(user.toString());
+                if(user != null){
+                    log.info(user.toString());
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

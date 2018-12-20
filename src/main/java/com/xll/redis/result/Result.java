@@ -10,14 +10,6 @@ import lombok.Data;
  **/
 @Data
 public class Result<T> {
-    private long totalPage;  //一共多少页
-
-    private long pageSize;  //每页多少条
-
-    private long total; //总数
-
-    private long currentPage; //当前第几页
-
     private T data;
 
     private String status;

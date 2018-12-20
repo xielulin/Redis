@@ -1,9 +1,6 @@
 package com.xll.redis.bean;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -17,7 +14,7 @@ public class User implements Serializable {
     private Long id;
 
     @Column(name = "age")
-    private int age;
+    private Integer age;
 
     @Column(name = "name")
     private String name;
