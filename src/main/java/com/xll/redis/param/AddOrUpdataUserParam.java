@@ -1,9 +1,10 @@
 package com.xll.redis.param;
 
-import lombok.Data;
+import com.xll.redis.method.Insert;
+import com.xll.redis.method.Update;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -12,17 +13,21 @@ import javax.validation.constraints.NotNull;
  * @desc 新增User请求参数类
  **/
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddOrUpdataUserParam {
 
+    @NotNull(message = "id不能为空",groups = {Update.class})
     private Long id;
 
-    @NotNull(message = "age不能为空")
+    @NotNull(message = "age不能为空",groups = {Update.class,Insert.class})
     private Integer age;
 
-    @NotBlank(message = "name不能为空")
+    @NotBlank(message = "name不能为空",groups = {Update.class,Insert.class})
     private String name;
 
-    @NotBlank(message = "sex不能为空")
+    @NotBlank(message = "sex不能为空",groups = {Update.class,Insert.class})
     private String sex;
 
 }

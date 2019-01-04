@@ -1,20 +1,24 @@
 package com.xll.redis.param;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author xielulin
  * @create 2018-12-18 12:00
  * @desc
  **/
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class GetByNameParam extends BaseParam {
-    @NotBlank(message = "name不能为空")
     private String name;
+
+    public GetByNameParam(Integer currentPage, Integer pageSize, String name) {
+        super(currentPage, pageSize);
+        this.name = name;
+    }
 }

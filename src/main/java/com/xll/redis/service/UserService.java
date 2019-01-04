@@ -1,6 +1,7 @@
 package com.xll.redis.service;
 
 import com.xll.redis.bean.User;
+import com.xll.redis.dto.UserDto;
 import com.xll.redis.param.AddOrUpdataUserParam;
 import com.xll.redis.param.GetByNameParam;
 import com.xll.redis.result.Result;
@@ -22,7 +23,7 @@ public interface UserService {
      * @param id
      * @return com.xll.redis.bean.User
      */
-    User getUser(Long id);
+    UserDto getUser(Long id);
 
     /**
      * @description 新增

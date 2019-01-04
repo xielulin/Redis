@@ -2,6 +2,7 @@ package com.xll.redis.config;
 
 import com.xll.redis.exception.BaseException;
 import com.xll.redis.result.Result;
+import org.apache.shiro.ShiroException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,9 @@ public class ErrorConfiguration {
         @ExceptionHandler(value = Exception.class)
         @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
         public Object jsonErrorHandler(HttpServletRequest request, Exception e) throws Exception {
+            if(e instanceof ShiroException){
+                throw e;
+            }
             logger.error(e.getMessage());
             return Result.warn(e.getMessage());
         }

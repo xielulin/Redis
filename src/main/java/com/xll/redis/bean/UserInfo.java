@@ -1,7 +1,6 @@
 package com.xll.redis.bean;
 
-import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +12,10 @@ import java.util.List;
  * @desc 用户表
  **/
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserInfo implements Serializable {
     @Id
     @GeneratedValue
@@ -23,8 +25,16 @@ public class UserInfo implements Serializable {
     private String name;//名称（昵称或者真实姓名，不同系统不同定义）
     private String password; //密码;
     private String salt;//加密密码的盐
-    private byte state;//用户状态,0:创建未认证（比如没有激活，没有输入验证码等等）--等待验证的用户 , 1:正常状态,2：用户被锁定.
+    private byte state;//用户状态 1:正常状态,2:用户被锁定,3:已删除
     @ManyToMany(fetch= FetchType.EAGER)//立即从数据库中进行加载数据;
     @JoinTable(name = "SysUserRole", joinColumns = { @JoinColumn(name = "uid") }, inverseJoinColumns ={@JoinColumn(name = "roleId") })
     private List<SysRole> roleList;// 一个用户具有多个角色
+
+    /**
+     * 密码盐.
+     * @return
+     */
+    public String getCredentialsSalt(){
+        return this.username+this.salt;
+    }
 }

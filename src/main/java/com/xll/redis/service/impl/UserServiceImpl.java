@@ -3,6 +3,7 @@ package com.xll.redis.service.impl;
 import com.xll.redis.bean.User;
 import com.xll.redis.constants.Constant;
 import com.xll.redis.dao.UserRepository;
+import com.xll.redis.dto.UserDto;
 import com.xll.redis.exception.BaseException;
 import com.xll.redis.param.AddOrUpdataUserParam;
 import com.xll.redis.param.GetByNameParam;
@@ -13,7 +14,6 @@ import com.xll.redis.utils.DateUtil;
 import lombok.extern.java.Log;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -45,12 +45,6 @@ public class UserServiceImpl  implements UserService {
     @Autowired
     RedisTemplate redisTemplate;
 
-    @Autowired
-    CacheManager cacheManager;
-
-    private static final String REDIS_KEY = "User";
-
-
     @Cacheable(value="users", key="#id")
     public User getUsers(Long id) {
         ValueOperations <String,User> valueOperations = redisTemplate.opsForValue();
@@ -66,7 +60,6 @@ public class UserServiceImpl  implements UserService {
                 user = optional.get();
                 valueOperations.set(user.getId().toString(),user);
                 log.info(date+":无缓存的时候调用");
-                log.info(date+": 新增user入redis");
                 return user;
             } else{
                 return null;
@@ -77,9 +70,10 @@ public class UserServiceImpl  implements UserService {
 
     @Override
     @Cacheable(value="users", key="args[0]",unless = "#result == null ")
-    public User getUser(Long id) {
+    public UserDto getUser(Long id) {
         User user = userRepository.getByIdAndDelIsFalse(id);
-        return user;
+        UserDto dto = new UserDto(user.getId(),user.getAge(),user.getName(),user.getSex());
+        return dto;
     }
 
     @Override
@@ -90,15 +84,17 @@ public class UserServiceImpl  implements UserService {
         user.setName(param.getName());
         user.setSex(param.getSex());
         user= userRepository.saveAndFlush(user);
-        String date = DateUtil.getText(DateUtil.DateFormat.DF_YYYY_MM_DD_HH_MM);
-        log.info(date+": user添加成功！");
+        log.info("user添加成功！");
         return user;
     }
 
     @Override
     @CachePut(value="users", key="args[0].id")
     public User updateUser(AddOrUpdataUserParam param) {
-        User user = getUser(param.getId());
+        User user = userRepository.getByIdAndDelIsFalse(param.getId());;
+        if(user == null){
+            throw new BaseException("id错误，更新失败");
+        }
         user.setAge(param.getAge());
         user.setName(param.getName());
         user.setSex(param.getSex());
@@ -108,7 +104,7 @@ public class UserServiceImpl  implements UserService {
     @Override
     @CacheEvict(value="users", key="args[0]")
     public void deleteUser(Long id) {
-        User user = getUser(id);
+        User user = userRepository.getByIdAndDelIsFalse(id);
         if(user == null){
             throw new BaseException("删除user失败，该id不存在");
         }

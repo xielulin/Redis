@@ -1,7 +1,6 @@
 package com.xll.redis.bean;
 
-import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +12,10 @@ import java.util.List;
  * @desc
  **/
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysPermission implements Serializable {
     @Id
     @GeneratedValue
@@ -26,7 +28,7 @@ public class SysPermission implements Serializable {
     private Long parentId; //父编号
     private String parentIds; //父编号列表
     private Boolean available = Boolean.FALSE;
-    @ManyToMany
+    @ManyToMany(fetch= FetchType.EAGER)
     @JoinTable(name="SysRolePermission",joinColumns={@JoinColumn(name="permissionId")},inverseJoinColumns={@JoinColumn(name="roleId")})
     private List<SysRole> roles;
 }

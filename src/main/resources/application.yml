@@ -19,14 +19,32 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     filters: stat,wall,log4j
     connectionProperties: true
+  #jpa:
+  #  hibernate:
+  #     ddl-auto: update
+  #    show-sql: true
+  #    ddl-auto: update
+  #    enable_lazy_load_no_trans: true
+
+   # show-sql: true
+   # open-in-view: true
   jpa:
-    hibernate:
-#      ddl-auto: update
-      show-sql: true
-      ddl-auto: update
-      enable_lazy_load_no_trans: true
+    database: mysql
     show-sql: true
-    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: org.hibernate.cfg.DefaultComponentSafeNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    open-in-view: true
+
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+    prefix: classpath:templates/
+    suffix: .html
 
   redis:
     database: 0
@@ -45,3 +63,11 @@ spring:
     in-memory: true
     pool:
       enabled: false
+
+  #热部署生效
+  devtools:
+    restart:
+      enabled: true
+      #classpath目录下的WEB-INF文件夹内容修改不重启
+      additional-exclude: WEB-INF/**
+      #设置重启的目录

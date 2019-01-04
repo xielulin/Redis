@@ -33,7 +33,7 @@ public class RedisApplicationTests {
         log.info("************");
         countDownLatch.countDown();*/
     }
-
+/*
     class MyThread implements Runnable{
         @Override
         public void run() {
@@ -50,5 +50,5 @@ public class RedisApplicationTests {
             }
 
         }
-    }
+    }*/
 }
