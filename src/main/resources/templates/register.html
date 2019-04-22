@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+信息：<h4 th:text="${desc}"></h4>
+<form action="/guest/register" method="post">
+    <p>账号：<input type="text" name="username" value=""/></p>
+    <p>昵称：<input type="text" name="name" value=""/></p>
+    <p>密码：<input type="text" name="password" value=""/></p>
+    <p><input type="submit" value="注册"/></p>
+</form>
+</body>
+</html>
